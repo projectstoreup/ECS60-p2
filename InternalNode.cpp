@@ -21,11 +21,16 @@ int InternalNode::getMinimum()const
 } // InternalNode::getMinimum()
 
 
-InternalNode* InternalNode::insert(int value)
+InternalNode* InternalNode::insert(int value) 
+/* base case: check if full array, if not add */
 {
-  for (int i = 0; i < count; i++)
-    if (value < keys[i])
-      i == 0 ? children[i]->insert(value) : children[i-1]->insert(value);
+  for (int index = 0; index < count; index++)	
+    if (value < keys[index]) {    // search children
+      if(index == 0) 
+	children[index]->insert(value);  // place at minimum if empty
+      else
+        children[index-1]->insert(value);   // place in sorted position
+   }
   // students must write this
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
@@ -33,7 +38,7 @@ InternalNode* InternalNode::insert(int value)
 void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
 { // Node must be the root, and node1
   // students must write this
-} // InternalNode::insert()
+} // InternalNode::insert() */
 
 void InternalNode::insert(BTreeNode *newNode) // from a sibling
 {

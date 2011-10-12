@@ -11,8 +11,7 @@ LeafNode::LeafNode(int LSize, InternalNode *p,
 {
   values = new int[LSize];
 }  // LeafNode()
-
-
+  
 
 int LeafNode::getMinimum()const
 {
@@ -24,11 +23,29 @@ int LeafNode::getMinimum()const
 } // LeafNode::getMinimum()
 
 
-LeafNode* LeafNode::insert(int value)
+LeafNode* LeafNode::insert(int value) 
 {
-  if (count < leafsize)
-    values[count] = value;
-  // students must write this
+  if (this.getCount == 0)
+    values[leafsize] = value;
+    
+
+
+  if (count < leafsize)      // make sure leaf node isn't full
+    values[0] = value; /* <---- simplest case; assume leaf is empty */
+
+/*   // search-insert
+
+     // iterate through array and insert value
+     for (int i = count - 1; i = 0; --i) 
+       if (value > values[i])
+
+        // Now must shift -- make into subfuction?
+       for (int hole_it = count; hole_it < i; hole_it--)
+         values[hole_it] = values[hole_it -1];
+
+       // actual insert
+       values[i] = value;              */
+
   return NULL; // to avoid warnings for now.
 }  // LeafNode::insert()
 
