@@ -23,6 +23,9 @@ int InternalNode::getMinimum()const
 
 InternalNode* InternalNode::insert(int value)
 {
+  for (int i = 0; i < count; i++)
+    if (value < keys[i])
+      i == 0 ? children[i]->insert(value) : children[i-1]->insert(value);
   // students must write this
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()

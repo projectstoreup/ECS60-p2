@@ -26,6 +26,8 @@ int LeafNode::getMinimum()const
 
 LeafNode* LeafNode::insert(int value)
 {
+  if (count < leafsize)
+    values[count] = value;
   // students must write this
   return NULL; // to avoid warnings for now.
 }  // LeafNode::insert()
