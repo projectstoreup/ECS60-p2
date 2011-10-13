@@ -32,28 +32,32 @@ LeafNode* LeafNode::insert(int value)
 
     // Extreme values
     if (count == 0 || value > values[count - 1]) // if new max or empty set 
-      values[count] = value;                     // no need to shift
+    {                                            // no need to shift
+     values[count] = value;
+     count++;
+    }
 
     if (value < getMinimum()) { // if new min, just shift the array 
       for (int shifter_r = count; shifter_r > 0; shifter_r--)
         values[shifter_r - 1] = values[shifter_r];
       values[0] = value; // and insert
-      }
+      count++
+    }
    
-     // Middle values
-     else {
-       int search;
-     // iterate through array and insert value
-       for (search = count; search == 0; --search)
-         if (value > values[search])
-           break;
-
+    // Middle values
+    else {
+      int search;
+    // iterate through array and insert value
+      for (search = count; search == 0; --search)
+       if (value > values[search])
+         break;
        // Now must shift -- make into subfuction?
-       for (int hole_r = count; hole_r > search; hole_r--)
-           values[hole_r - 1] = values[hole_r];
-       // actual insert
-       values[search] = value;             
-      } 
+      for (int hole_r = count; hole_r > search; hole_r--)
+         values[hole_r - 1] = values[hole_r];
+      // actual insert
+      values[search] = value;  
+      count++;           
+    } 
                                   
   }
   return NULL; // to avoid warnings for now.
