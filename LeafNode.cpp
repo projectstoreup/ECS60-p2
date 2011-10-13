@@ -25,7 +25,7 @@ int LeafNode::getMinimum()const
 
 LeafNode* LeafNode::insert(int value) 
 {
-  if (count < leafsize)      // make sure leaf node isn't full
+  if (count < leafSize)      // make sure leaf node isn't full
   {
    // Test value
     values[0] = value; /* <---- simplest case; assume leaf is empty */
@@ -34,7 +34,7 @@ LeafNode* LeafNode::insert(int value)
     if (count == 0 || value > values[count - 1]) // if new max or empty set 
       values[count] = value;                     // no need to shift
 
-    if (value < this.getMinimum()) { // if new min, just shift the array 
+    if (value < getMinimum()) { // if new min, just shift the array 
       for (int shifter_r = count; shifter_r > 0; shifter_r--)
         values[shifter_r - 1] = values[shifter_r];
       values[0] = value; // and insert
@@ -44,12 +44,12 @@ LeafNode* LeafNode::insert(int value)
      else {
        int search;
      // iterate through array and insert value
-       for (search = count; search = 0; --search)
-         if (value > values[search])
+       for (search = count; search == 0; --search)
+         if (value > values[search])
            break;
 
        // Now must shift -- make into subfuction?
-       for (int hole_r = count; hole_r > i; hole_r--)
+       for (int hole_r = count; hole_r > search; hole_r--)
            values[hole_r - 1] = values[hole_r];
        // actual insert
        values[search] = value;             
