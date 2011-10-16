@@ -7,8 +7,8 @@ InternalNode::InternalNode(int ISize, int LSize,
   InternalNode *p, BTreeNode *left, BTreeNode *right) :
   BTreeNode(LSize, p, left, right), internalSize(ISize)
 {
-  keys = new int[internalSize]; // keys[i] is the minimum of children[i]
-  children = new BTreeNode* [ISize];
+  keys = new int[(int)ISize]; // keys[i] is the minimum of children[i]
+  children = new BTreeNode* [(int)ISize];
 } // InternalNode::InternalNode()
 
 
