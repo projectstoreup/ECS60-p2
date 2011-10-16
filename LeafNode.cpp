@@ -31,6 +31,26 @@ LeafNode* LeafNode::insert(int value)
     values[0] = value; /* <---- simplest case; assume leaf is empty */
 
     // Extreme values
+
+  }
+  return NULL; // to avoid warnings for now.
+}  // LeafNode::insert()
+
+void LeafNode::print(Queue <BTreeNode*> &queue)
+{
+  cout << "Leaf: ";
+  for (int i = 0; i < count; i++)
+    cout << values[i] << ' ';
+  cout << endl;
+} // LeafNode::print()
+
+void LeafNode::shift(int startpos){
+       for (int hole_r = count; hole_r > startpos; hole_r--)
+           values[hole_r - 1] = values[hole_r];
+}
+
+void LeafNode::addValue(int value){
+
     if (count == 0 || value > values[count - 1]) // if new max or empty set 
     {                                            // no need to shift
      values[count] = value;
@@ -52,23 +72,11 @@ LeafNode* LeafNode::insert(int value)
        if (value > values[search])
          break;
        // Now must shift -- make into subfuction?
-      for (int hole_r = count; hole_r > search; hole_r--)
-         values[hole_r - 1] = values[hole_r];
-      // actual insert
-      values[search] = value;  
-      count++;           
-    } 
+       // actual insert
+       values[search] = value;             
+      } 
+>>>>>>> 67fed444d6eedbc9af9c75f115f91b259b135c8a
                                   
-  }
-  return NULL; // to avoid warnings for now.
-}  // LeafNode::insert()
 
-void LeafNode::print(Queue <BTreeNode*> &queue)
-{
-  cout << "Leaf: ";
-  for (int i = 0; i < count; i++)
-    cout << values[i] << ' ';
-  cout << endl;
-} // LeafNode::print()
-
+}
 

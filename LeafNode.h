@@ -13,6 +13,10 @@ public:
   LeafNode* insert(int value); // returns pointer to new Leaf if splits
   // else NULL
   void print(Queue <BTreeNode*> &queue);
+
+ private:
+  void addValue(int value);
+  void shift(int startpos);
 }; //LeafNode class
 
 #endif
