@@ -75,8 +75,5 @@ void LeafNode::addValue(int value){
        // actual insert
        values[search] = value;             
       } 
->>>>>>> 67fed444d6eedbc9af9c75f115f91b259b135c8a
-                                  
-
 }
 
