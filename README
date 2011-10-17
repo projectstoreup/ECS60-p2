@@ -16,9 +16,6 @@ addtLeft
     value[i] = value[i - 1]
     value[count - 1] = last
 
-###remember to add in shift algorithm for loop, (...; i >= 0 && value[i] > value;...)
-  ###remember count++;
-
 LeafNode *n = newleaf(size, parent, this, rightSibling, NULL)
 
 for(int = (leafSize + 1)/2; i < leafSize; i++)
@@ -27,7 +24,7 @@ for(int = (leafSize + 1)/2; i < leafSize; i++)
 
 ###Problem: silll need to update LeafNode keys after this; apparently causes seg faults
 
-###If you want to promote the leftSibling, must do case
+###If you want to promote the leftSibling, must do the following cast
   // (InternalNode*)leftSibling
 
 ###To inform root of change, make new member function
