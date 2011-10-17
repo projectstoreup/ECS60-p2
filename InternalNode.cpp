@@ -31,6 +31,7 @@ InternalNode* InternalNode::insert(int value)
       else
         children[index-1]->insert(value);   // place in sorted position
    }
+  count++;
   // students must write this
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
