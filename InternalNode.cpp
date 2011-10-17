@@ -11,7 +11,6 @@ InternalNode::InternalNode(int ISize, int LSize,
   children = new BTreeNode* [(int)ISize];
 } // InternalNode::InternalNode()
 
-
 int InternalNode::getMinimum()const
 {
   if(count > 0)   // should always be the case
@@ -31,7 +30,6 @@ InternalNode* InternalNode::insert(int value)
       else
         children[index-1]->insert(value);   // place in sorted position
    }
-  count++;
   // students must write this
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
