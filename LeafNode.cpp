@@ -17,9 +17,8 @@ LeafNode::LeafNode(int LSize, InternalNode *p,
 void LeafNode::addValue(int value)
 {
 
-  if (count == 0 || value > values[count - 1])
-  {                                            // if new max or empty set 
-    values[count] = value;                     // no need to shift
+  if (count == 0 || value > values[count - 1]) {  // if new max or empty set 
+    values[count] = value;                        // no need to shift
     return;
   }
 
@@ -51,7 +50,7 @@ int addtoLeft( ) {
 }
 
 */
-  
+
 int LeafNode::getMinimum()const
 {
   if(count > 0)  // should always be the case
@@ -70,24 +69,25 @@ LeafNode* LeafNode::insert(int value)
     count++;                 // update count
   }
 
-/*  More advanced cases
-
+  // ----More advanced cases---- //
   else   // need to place values elsewhere
   {
     // check that a leftSibling exists, and that it's not full 
-    if(leftSibling && leftSibling->getCount > leafSize)
-      addtoLeft(value);
+    if(leftSibling && leftSibling->getCount() < leafSize)
+      leftSibling->insert(value);
     // same for RS
-    else if(rightSibling && rightSibling->getCount < leafSize)
-      addtoRight(value);
+    else if(rightSibling && rightSibling->getCount() < leafSize)
+      rightSibling->insert(value);
     // if all else fails, we need to split
-    else
-      split();
+    else{
+      addValue(value);
+      count++;
+      LeafNode* newnode = split();
+      return newnode;
+    }
   }
-
-*/
-    
-  return NULL; // to avoid warnings for now.
+ 
+  return NULL; // we didn't split, dont return anything
 }  // LeafNode::insert()
 
 void LeafNode::print(Queue <BTreeNode*> &queue)
@@ -98,18 +98,24 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
   cout << endl;
 } // LeafNode::print()
 
+
 void LeafNode::shift(int startpos)
 {
   for (int hole_r = count; hole_r > startpos; hole_r--)
     values[hole_r] = values[hole_r -1];
-}
+} // LeafNode::print()
 
-void LeafNode::split()
+
+LeafNode* LeafNode::split()
 {
-  LeafNode *n = newleaf(leafSize, parent,  // check this
-   this, rightSibling, NULL)
+  LeafNode *n = new LeafNode(leafSize, parent, this, rightSibling);
   
-  for(int = (leafSize + 1)/2; i < leafSize; i++)
-    // the above should ensure half full
-    // insert the 'insert new values' algorithm here
-}
+  rightSibling = n;
+
+  for(int i = (count + 1)/2; i < leafSize; i++){
+    n->insert(values[i]);
+    count--;
+  } // the above should ensure half full
+   
+  return n;
+} // LeafNode::split()

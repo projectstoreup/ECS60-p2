@@ -17,6 +17,11 @@ public:
   void insert(BTreeNode *oldRoot, BTreeNode *node2); // if root splits use this
   void insert(BTreeNode *newNode); // from a sibling
   void print(Queue <BTreeNode*> &queue);
+
+ private:
+  void addChild(BTreeNode child);
+  void shift(int startpos);
+  InternalNode* split();
 }; // InternalNode class
 
 #endif

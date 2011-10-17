@@ -1,3 +1,11 @@
+==================================== TODO =====================================
++most of insert algorithm for InternalNode is done, but needs to be finished up
++insert root needs to be coded
++splitting code = the one from leafnode. Needs to be amended.
++testing testing testing
+
+=================================== Notes =====================================
+
 ##TA's notes in pseudocode/C++
 
 Root = new leafnode(LSize, NULL, ... )
