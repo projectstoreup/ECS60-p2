@@ -13,8 +13,16 @@ BTree::BTree(int ISize, int LSize):internalSize(ISize), leafSize(LSize)
 
 void BTree::insert(const int value)
 {
-  root->insert(value);
-  // students must write this
+  BTreeNode* node;
+  node = root->insert(value);
+  
+  if (node){    // did the root split?
+    // Create the new root
+    InternalNode* newRoot = new InternalNode(internalSize, leafSize, NULL, NULL, NULL);
+    newRoot->insert(root, node);
+    // set is as root
+    root = newRoot;
+  }
 } // BTree::insert()
 
 

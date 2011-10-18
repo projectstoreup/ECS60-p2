@@ -17,6 +17,7 @@ public:
  private:
   void addValue(int value);
   void shift(int startpos);
+  void addtoLeft();
   LeafNode* split();
 }; //LeafNode class
 

@@ -22,20 +22,28 @@ int InternalNode::getMinimum()const
 
 
 InternalNode* InternalNode::insert(int value) 
-/* base case: check if full array, if not add */
 {
-  LeafNode* node;
-  for (int index = 0; index < count; index++)	
+
+  BTreeNode* node = NULL;
+
+  bool found = false;
+  for (int index = 0; index < count; index++){
     if (value < keys[index]) {    // search children
       if(index == 0) 
 	node = children[index]->insert(value);  // place at minimum if empty
       else
         node = children[index-1]->insert(value);   // place in sorted position
-   }
-  
-  if (node)
+      found = true;
+      break;
+    }
+  }
+  if (!found)     // means value does not go in any of the first count-2 nodes
+    node = children[count-1]->insert(value); // so insert in last node
+ 
+  if (node)  // if the LeafNode split, insert it into the array
     insert(node);
 
+  updateKeys();
   // students must write this
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
@@ -43,16 +51,43 @@ InternalNode* InternalNode::insert(int value)
 
 void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
 { // Node must be the root, and node1
-  // students must write this
+  addChild(oldRoot);
+  addChild(node2);
 } // InternalNode::insert() */
 
 
 void InternalNode::insert(BTreeNode *newNode) // from a sibling
 {
-  if (count < leafSize){      // make sure leaf node isn't full
-      addChild(newNode);         // insert value in sorted position in array
-      count++;          
+  if (count < leafSize){        // make sure leaf node isn't full
+      addChild(newNode);        // insert value in sorted position in array
   } 
+
+  /*
+    ++++++++++++++++  Straight from leafnode, needs work ++++++++++++++++
+
+  // ----More advanced cases---- //
+  else   // need to place values elsewhere
+  {
+    // check that a leftSibling exists, and that it's not full 
+    if(leftSibling && leftSibling->getCount() < leafSize){
+      //      addtoLeft();
+      addChild(newNode);
+    }
+    // same for RS
+    else if(rightSibling && rightSibling->getCount() < leafSize)
+      rightSibling->insert(value);
+    // if all else fails, we need to split
+    else{
+      addChild(newNode);   // add value anyway, as it makes splitting much simpler
+
+      LeafNode* newnode = split();
+      return newnode;
+    }
+  }
+  */
+
+
+
 } // InternalNode::insert()
 
 
@@ -74,20 +109,20 @@ void InternalNode::print(Queue <BTreeNode*> &queue)
 void InternalNode::addChild(BTreeNode* child)
 {
   int key = child->getMinimum();
-
+  
+  
   if (count == 0 || key > keys[count - 1]) {  // if new max or empty set 
     keys[count] = key;                        // no need to shift
     children[count] = child;
-    return;
   }
 
-  if (key < getMinimum()){
+  else  if (key < getMinimum()){   // is the smallest node
     shift(0);
     keys[0] = key;
     children[0] = child;
-    return;
   }
-
+  
+  else{                            // typical insert
   int search;
   // iterate through array and insert key
   for (search = 0; search <= count; search++)
@@ -97,6 +132,14 @@ void InternalNode::addChild(BTreeNode* child)
   shift(--search);  //otherwise inserts one element too far
   // actual insert
   keys[search] = key;                           
+  }
+
+  child->setParent(this);          // make sure parent pointer is right
+
+  count++;                         // make sure count stays updated
+  
+  updateKeys();                    // make sure keys are right
+
 }
 
 
@@ -121,3 +164,9 @@ InternalNode* InternalNode::split()
    
   return n;
 } // LeafNode::split()
+
+
+void InternalNode::updateKeys(){
+  for (int i = 0; i < count; i++)
+    keys[i] = children[i]->getMinimum();
+}

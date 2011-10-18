@@ -1,5 +1,5 @@
 #ifndef InternalNodeH
-  #define InternalNodeH
+#define InternalNodeH
 
 #include "BTreeNode.h"
 
@@ -19,8 +19,9 @@ public:
   void print(Queue <BTreeNode*> &queue);
 
  private:
-  void addChild(BTreeNode child);
+  void addChild(BTreeNode* child);
   void shift(int startpos);
+  void updateKeys();
   InternalNode* split();
 }; // InternalNode class
 

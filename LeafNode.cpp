@@ -19,37 +19,42 @@ void LeafNode::addValue(int value)
 
   if (count == 0 || value > values[count - 1]) {  // if new max or empty set 
     values[count] = value;                        // no need to shift
-    return;
   }
 
-  if (value < getMinimum()){
+  else if (value < getMinimum()){
     shift(0);
     values[0] = value;
-    return;
   }
 
-  int search;
-  // iterate through array and insert value
-  for (search = 0; search <= count; search++)
-    if (value > values[search])
-      break;
+  else {
+    int search;
+    // iterate through array and insert value
+    for (search = 0; search <= count; search++)
+      if (value > values[search])
+	break;
 
-  shift(--search);
-  // actual insert
-  values[search] = value;                           
+    shift(--search);
+    // actual insert
+    values[search] = value;                           
+
+  }
+
+  count++;
+
 }
 
 
-/* addtoLeft pseudocode
 
-int addtoLeft( ) {
+void LeafNode::addtoLeft( ) 
+{
   leftSibling->insert(values[0]);
-  for( each element in left sibling )
-    value[i] = value[i - 1];
-    value[count - 1] = last;
+  
+  //shift all values left one
+  for (int i = 0; i < count - 1; i++)
+    values[i] = values[i+1];
+  count--;
 }
 
-*/
 
 int LeafNode::getMinimum()const
 {
@@ -66,22 +71,23 @@ LeafNode* LeafNode::insert(int value)
   if (count < leafSize)      // make sure leaf node isn't full
   {
     addValue(value);         // insert value in sorted position in array
-    count++;                 // update count
   }
 
   // ----More advanced cases---- //
   else   // need to place values elsewhere
   {
     // check that a leftSibling exists, and that it's not full 
-    if(leftSibling && leftSibling->getCount() < leafSize)
-      leftSibling->insert(value);
+    if(leftSibling && leftSibling->getCount() < leafSize){
+      addtoLeft();
+      addValue(value);
+    }
     // same for RS
     else if(rightSibling && rightSibling->getCount() < leafSize)
       rightSibling->insert(value);
     // if all else fails, we need to split
     else{
-      addValue(value);
-      count++;
+      addValue(value);   // add value anyway, as it makes splitting much simpler
+
       LeafNode* newnode = split();
       return newnode;
     }
@@ -112,10 +118,12 @@ LeafNode* LeafNode::split()
   
   rightSibling = n;
 
-  for(int i = (count + 1)/2; i < leafSize; i++){
+  // <= leafSize because we have one value than the max
+  for(int i = (count)/2; i <= leafSize; i++){  
     n->insert(values[i]);
     count--;
   } // the above should ensure half full
-   
+  
   return n;
+  
 } // LeafNode::split()
