@@ -30,10 +30,10 @@ void LeafNode::addValue(int value)
     int search;
     // iterate through array and insert value
     for (search = 0; search <= count; search++)
-      if (value > values[search])
+      if (value < values[search])
 	break;
 
-    shift(--search);
+    shift(search);
     // actual insert
     values[search] = value;                           
 
@@ -44,14 +44,16 @@ void LeafNode::addValue(int value)
 }
 
 
-
-void LeafNode::addtoLeft( ) 
+void LeafNode::addToLeft( ) 
 {
+  // give leftSibling smallest value
   leftSibling->insert(values[0]);
   
-  //shift all values left one
+  // shift all values left one
   for (int i = 0; i < count - 1; i++)
     values[i] = values[i+1];
+
+  // update the count
   count--;
 }
 
@@ -68,12 +70,15 @@ int LeafNode::getMinimum()const
 
 LeafNode* LeafNode::insert(int value) 
 {
+  LeafNode* newnode = NULL;  // in case the node splits;
+
   if (count < leafSize)      // make sure leaf node isn't full
   {
     addValue(value);         // insert value in sorted position in array
   }
-
+  
   // ----More advanced cases---- //
+
   else   // need to place values elsewhere
   {
     // check that a leftSibling exists, and that it's not full 
@@ -82,18 +87,20 @@ LeafNode* LeafNode::insert(int value)
       addValue(value);
     }
     // same for RS
-    else if(rightSibling && rightSibling->getCount() < leafSize)
-      rightSibling->insert(value);
+    else if(rightSibling && rightSibling->getCount() < leafSize){
+      // insert in sorted position, temporarily go over max
+      addValue(value);
+      //give the largest value to the right sibling, update count
+      rightSibling->insert(values[--count]);
+    }
     // if all else fails, we need to split
     else{
       addValue(value);   // add value anyway, as it makes splitting much simpler
 
-      LeafNode* newnode = split();
-      return newnode;
+      newnode = split();
     }
   }
- 
-  return NULL; // we didn't split, dont return anything
+  return newnode;       // NULL if not split, new node otherwise
 }  // LeafNode::insert()
 
 void LeafNode::print(Queue <BTreeNode*> &queue)
@@ -116,6 +123,9 @@ LeafNode* LeafNode::split()
 {
   LeafNode *n = new LeafNode(leafSize, parent, this, rightSibling);
   
+   // update sibling pointers
+  if(rightSibling)
+    rightSibling->setLeftSibling(n);
   rightSibling = n;
 
   // <= leafSize because we have one value than the max

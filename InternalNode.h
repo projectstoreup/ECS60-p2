@@ -22,6 +22,8 @@ public:
   void addChild(BTreeNode* child);
   void shift(int startpos);
   void updateKeys();
+  void addToLeft();
+  InternalNode* insertWhenFull(BTreeNode* node);
   InternalNode* split();
 }; // InternalNode class
 

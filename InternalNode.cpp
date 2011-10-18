@@ -25,6 +25,7 @@ InternalNode* InternalNode::insert(int value)
 {
 
   BTreeNode* node = NULL;
+  InternalNode split = NULL;
 
   bool found = false;
   for (int index = 0; index < count; index++){
@@ -40,12 +41,16 @@ InternalNode* InternalNode::insert(int value)
   if (!found)     // means value does not go in any of the first count-2 nodes
     node = children[count-1]->insert(value); // so insert in last node
  
-  if (node)  // if the LeafNode split, insert it into the array
-    insert(node);
+  if (node){  // if the LeafNode split, insert it into the array
+    if (count < internalSize)
+      insert(node);
+    else
+     split =  insertWhenFull(node);
+  }
 
   updateKeys();
-  // students must write this
-  return NULL; // to avoid warnings for now.
+
+  return split;   // NULL if we didn't split, second node otherwise
 } // InternalNode::insert()
 
 
@@ -58,38 +63,35 @@ void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
 
 void InternalNode::insert(BTreeNode *newNode) // from a sibling
 {
-  if (count < leafSize){        // make sure leaf node isn't full
+  if (count < internalSize){        // make sure node isn't full
       addChild(newNode);        // insert value in sorted position in array
   } 
-
-  /*
-    ++++++++++++++++  Straight from leafnode, needs work ++++++++++++++++
-
-  // ----More advanced cases---- //
-  else   // need to place values elsewhere
-  {
-    // check that a leftSibling exists, and that it's not full 
-    if(leftSibling && leftSibling->getCount() < leafSize){
-      //      addtoLeft();
-      addChild(newNode);
-    }
-    // same for RS
-    else if(rightSibling && rightSibling->getCount() < leafSize)
-      rightSibling->insert(value);
-    // if all else fails, we need to split
-    else{
-      addChild(newNode);   // add value anyway, as it makes splitting much simpler
-
-      LeafNode* newnode = split();
-      return newnode;
-    }
-  }
-  */
-
 
 
 } // InternalNode::insert()
 
+InternalNode* InternalNode::insertWhenFull(BTreeNode* node){
+    // check that a leftSibling exists, and that it's not full 
+    if(leftSibling && leftSibling->getCount() < internalSize){
+      //      addtoLeft();
+      addChild(newNode);
+    }
+    // same for RS
+    else if(rightSibling && rightSibling->getCount() < internalSize){
+      // insert in sorted position, temporarily go over max
+      addChild(newNode);
+      // move largest child to right sibling
+      (InternalNode*)rightSibling->insert(children[--count]);
+    }
+    // if all else fails, we need to split
+    else{
+      addChild(newNode);   // add value anyway, as it makes splitting much simpler
+
+      InternalNode* newnode = split();
+      return newnode;
+    }
+    
+}
 
 void InternalNode::print(Queue <BTreeNode*> &queue)
 {
@@ -126,12 +128,13 @@ void InternalNode::addChild(BTreeNode* child)
   int search;
   // iterate through array and insert key
   for (search = 0; search <= count; search++)
-    if (key > keys[search])
+    if (key < keys[search])
       break;
 
-  shift(--search);  //otherwise inserts one element too far
   // actual insert
-  keys[search] = key;                           
+  shift(search);
+  keys[search] = key;
+  children[search] = child;
   }
 
   child->setParent(this);          // make sure parent pointer is right
@@ -169,4 +172,19 @@ InternalNode* InternalNode::split()
 void InternalNode::updateKeys(){
   for (int i = 0; i < count; i++)
     keys[i] = children[i]->getMinimum();
+}
+
+
+void InternalNode::addToLeft( ) 
+{
+  // give leftSibling smallest value
+  leftSibling->insert(children[0]);
+  
+  // shift all values left one
+  for (int i = 0; i < count - 1; i++){
+    keys[i] = keys[i+i];
+    children[i] = children[i+1];
+
+  // update the count
+  count--;
 }
