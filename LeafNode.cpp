@@ -83,7 +83,7 @@ LeafNode* LeafNode::insert(int value)
   {
     // check that a leftSibling exists, and that it's not full 
     if(leftSibling && leftSibling->getCount() < leafSize){
-      addtoLeft();
+      addToLeft();
       addValue(value);
     }
     // same for RS
