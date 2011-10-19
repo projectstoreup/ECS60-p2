@@ -76,7 +76,7 @@ InternalNode* InternalNode::insertWhenFull(BTreeNode* node){
 
     // check that a leftSibling exists, and that it's not full 
     if(leftSibling && leftSibling->getCount() < internalSize){
-      //      addtoLeft();
+      addToLeft();
       addChild(node);
     }
     // same for RS
@@ -160,9 +160,11 @@ InternalNode* InternalNode::split()
 {
   InternalNode *n = new InternalNode(internalSize, leafSize, parent, this, rightSibling);
   
+  if(rightSibling)
+    rightSibling->setLeftSibling(n);
   rightSibling = n;
 
-  for(int i = (count + 1)/2; i < leafSize; i++){
+  for(int i = (count)/2; i <= internalSize; i++){
     n->insert(children[i]);
     count--;
   } // the above should ensure half full
@@ -171,7 +173,8 @@ InternalNode* InternalNode::split()
 } // LeafNode::split()
 
 
-void InternalNode::updateKeys(){
+void InternalNode::updateKeys()
+{
   for (int i = 0; i < count; i++)
     keys[i] = children[i]->getMinimum();
 }
@@ -181,7 +184,7 @@ void InternalNode::addToLeft( )
 {
 
   // give leftSibling smallest value
-  ((InternalNode*)leftSibling)->insert((InternalNode*)children[0]);
+  ((InternalNode*)leftSibling)->insert(children[0]);
   
   // shift all values left one
   for (int i = 0; i < count - 1; i++){

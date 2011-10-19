@@ -123,7 +123,7 @@ LeafNode* LeafNode::split()
 {
   LeafNode *n = new LeafNode(leafSize, parent, this, rightSibling);
   
-   // update sibling pointers
+   // update sibling pointers 
   if(rightSibling)
     rightSibling->setLeftSibling(n);
   rightSibling = n;
