@@ -27,11 +27,11 @@ void LeafNode::addValue(int value)
   }
 
   else {
-    int search;
+    int search, temp_break = 1;
     // iterate through array and insert value
-    for (search = 0; search <= count; search++)
+    for (search = 0; search <= count, temp_break == 1; search++)
       if (value < values[search])
-	break;
+	temp_break = 0;
 
     shift(search);
     // actual insert
