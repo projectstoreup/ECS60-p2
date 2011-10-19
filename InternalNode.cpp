@@ -114,6 +114,7 @@ void InternalNode::addChild(BTreeNode* child)
 {
   int key = child->getMinimum();
   
+  updateKeys();                    // make sure keys are right
   
   if (count == 0 || key > keys[count - 1]) {  // if new max or empty set 
     keys[count] = key;                        // no need to shift
@@ -142,8 +143,8 @@ void InternalNode::addChild(BTreeNode* child)
   child->setParent(this);          // make sure parent pointer is right
 
   count++;                         // make sure count stays updated
-  
-  updateKeys();                    // make sure keys are right
+ 
+   updateKeys();                    // make sure keys are right
 
 }
 
